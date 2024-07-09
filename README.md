@@ -1,4 +1,4 @@
-# ts-types
+# react-ui
 
 ## Description
 Common ui component for react applications
