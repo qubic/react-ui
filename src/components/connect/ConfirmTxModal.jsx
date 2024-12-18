@@ -6,7 +6,7 @@ import CloseIcon from '../../assets/close.svg'
 import { useQubicConnect } from "./QubicConnectContext"
 
 const ConfirmTxModal = ({ tx, open, onClose, onConfirm, beTickOffset = 3 }) => {
-    const { getTick } = useQubicConnect()
+    const { getTickInfo } = useQubicConnect()
     const [confirmedTx, setConfirmedTx] = useState(null)
     const [initialTick, setInitialTick] = useState(null)
     const [tick, setTick] = useState(null)
@@ -17,8 +17,8 @@ const ConfirmTxModal = ({ tx, open, onClose, onConfirm, beTickOffset = 3 }) => {
 
     useEffect(() => {
         const fetchTick = async () => {
-          const t = await getTick();
-          setTick(t);
+          const t = await getTickInfo();
+          setTick(t.tick);
         };
 
         if (confirmedTx) {
@@ -27,7 +27,7 @@ const ConfirmTxModal = ({ tx, open, onClose, onConfirm, beTickOffset = 3 }) => {
         }
 
         return () => clearInterval(intervalId); // Cleanup interval on unmount or when confirmedTx changes
-    }, [confirmedTx, getTick]);
+    }, [confirmedTx, getTickInfo]);
 
     useEffect(() => {
         if (tick !== null && confirmedTx !== null && initialTick !== null) {
@@ -44,8 +44,8 @@ const ConfirmTxModal = ({ tx, open, onClose, onConfirm, beTickOffset = 3 }) => {
     const startTickFetchInterval = async (cTx) => {
         cTx.targetTick = cTx.targetTick + beTickOffset // add ticks as quottery backend buffer
         // Fetch initial tick value
-        const initialTickValue = await getTick()
-        setInitialTick(initialTickValue)
+        const initialTickInfo = await getTickInfo()
+        setInitialTick(initialTickInfo.tick)
         setConfirmedTx(cTx)
     }
 
