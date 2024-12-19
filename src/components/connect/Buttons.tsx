@@ -3,7 +3,7 @@ import {MetaMaskFlaskLogo} from './MetaMaskFlaskLogo.tsx'
 
 import type { MetamaskState } from './MetamaskContext.tsx'
 
-import type { Snap } from './types';
+import type { Snap } from '../../types';
 import { isLocalSnap } from './utils/snap';
 
 export const shouldDisplayReconnectButton = (installedSnap?: Snap) =>

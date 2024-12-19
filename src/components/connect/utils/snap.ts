@@ -1,7 +1,7 @@
 import type { MetaMaskInpageProvider } from '@metamask/providers';
 
 import { defaultSnapOrigin } from '../config';
-import type { GetSnapsResponse, Snap } from '../types';
+import type { GetSnapsResponse, Snap } from '../../../types';
 
 /**
  * Get the installed snaps in MetaMask.

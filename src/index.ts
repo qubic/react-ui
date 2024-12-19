@@ -26,5 +26,8 @@ export { default as ConnectModal } from './components/connect/ConnectModal';
 export { QubicConnectProvider, useQubicConnect } from './components/connect/QubicConnectContext';
 export { MetaMaskProvider, MetaMaskContext, type MetamaskState } from './components/connect/MetamaskContext';
 
+// Types
+export * from './types';
+
 // Utils
 export * from './components/util';

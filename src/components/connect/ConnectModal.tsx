@@ -10,7 +10,7 @@ import CloseIcon from '../../assets/close.svg'
 import { HeaderButtons } from './Buttons'
 import { MetaMaskContext } from './MetamaskContext.tsx'
 import { connectSnap, getSnap } from './utils'
-import { Account } from './types'
+import { Account } from '../../types'
 import { MetaMaskTypo } from './MetaMaskTypo'
 import { MetaMaskLogo } from './MetaMaskLogo'
 
