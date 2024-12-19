@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
-import circleInfo from '../../assets/circle-info.svg';
+import React, { useState } from 'react'
+import circleInfo from '../../assets/circle-info.svg'
 
-const LabelWithPopover = ({ htmlFor, label, description }) => {
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+export interface LabelWithPopoverProps {
+  /**
+   * HTML for attribute for the label
+   */
+  htmlFor: string
+  /**
+   * Label text
+   */
+  label: string
+  /**
+   * Description text for the popover
+   */
+  description: string
+}
+
+const LabelWithPopover: React.FC<LabelWithPopoverProps> = ({
+  htmlFor,
+  label,
+  description
+}) => {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const togglePopover = () => {
-    setIsPopoverOpen(!isPopoverOpen);
-  };
+    setIsPopoverOpen(!isPopoverOpen)
+  }
 
   return (
     <div className="relative inline-block">
@@ -29,7 +48,7 @@ const LabelWithPopover = ({ htmlFor, label, description }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default LabelWithPopover;
+export default LabelWithPopover

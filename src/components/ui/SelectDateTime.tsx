@@ -1,53 +1,79 @@
-import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react'
 
-const SelectDateTime = forwardRef(({ label, fieldId, onChange }, ref) => {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedHours, setSelectedHours] = useState('');
-  const [selectedMinutes, setSelectedMinutes] = useState('');
-  const [error, setError] = useState('');
+export interface DateTimeValue {
+  date: string
+  time: string
+}
 
-  const handleDateChange = (event) => {
-    const date = event.target.value;
-    setSelectedDate(date);
-    notifyChange(date, selectedHours, selectedMinutes);
-  };
+export interface SelectDateTimeProps {
+  /**
+   * Label text for the datetime selector
+   */
+  label: string
+  /**
+   * Base ID for the form fields
+   */
+  fieldId: string
+  /**
+   * Callback when date or time changes
+   */
+  onChange: (value: DateTimeValue) => void
+}
 
-  const handleHoursChange = (event) => {
-    const hours = event.target.value;
-    setSelectedHours(hours);
-    notifyChange(selectedDate, hours, selectedMinutes);
-  };
+export interface SelectDateTimeRef {
+  validate: () => boolean
+}
 
-  const handleMinutesChange = (event) => {
-    const minutes = event.target.value;
-    setSelectedMinutes(minutes);
-    notifyChange(selectedDate, selectedHours, minutes);
-  };
+const SelectDateTime: React.ForwardRefRenderFunction<SelectDateTimeRef, SelectDateTimeProps> = (
+  { label, fieldId, onChange },
+  ref
+) => {
+  const [selectedDate, setSelectedDate] = useState('')
+  const [selectedHours, setSelectedHours] = useState('')
+  const [selectedMinutes, setSelectedMinutes] = useState('')
+  const [error, setError] = useState('')
 
-  const notifyChange = (date, hours, minutes) => {
-    const time = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
-    onChange({ date, time });
-  };
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const date = event.target.value
+    setSelectedDate(date)
+    notifyChange(date, selectedHours, selectedMinutes)
+  }
+
+  const handleHoursChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const hours = event.target.value
+    setSelectedHours(hours)
+    notifyChange(selectedDate, hours, selectedMinutes)
+  }
+
+  const handleMinutesChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const minutes = event.target.value
+    setSelectedMinutes(minutes)
+    notifyChange(selectedDate, selectedHours, minutes)
+  }
+
+  const notifyChange = (date: string, hours: string, minutes: string) => {
+    const time = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`
+    onChange({ date, time })
+  }
 
   useImperativeHandle(ref, () => ({
     validate: () => {
       if (!selectedDate) {
-        setError('Date is required');
-        return false;
+        setError('Date is required')
+        return false
       }
       if (!selectedHours) {
-        setError('Hours are required');
-        return false;
+        setError('Hours are required')
+        return false
       }
       if (!selectedMinutes) {
-        setError('Minutes are required');
-        return false;
+        setError('Minutes are required')
+        return false
       }
-      setError('');
-      return true;
+      setError('')
+      return true
     }
-  }));
-
+  }))
 
   return (
     <div>
@@ -120,7 +146,7 @@ const SelectDateTime = forwardRef(({ label, fieldId, onChange }, ref) => {
       </div>
       {error && <p className="text-red-500 text-right text-sm">{error}</p>}
     </div>
-  );
-});
+  )
+}
 
-export default SelectDateTime;
+export default forwardRef(SelectDateTime)

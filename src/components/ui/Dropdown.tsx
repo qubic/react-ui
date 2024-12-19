@@ -1,6 +1,35 @@
 import React, { useState } from 'react'
 
-const Dropdown = ({ label, options, selected, setSelected }) => {
+export interface DropdownOption {
+  label: string
+  value: string | number
+}
+
+export interface DropdownProps {
+  /**
+   * Label displayed above the dropdown
+   */
+  label: string
+  /**
+   * Array of options to display in the dropdown
+   */
+  options: DropdownOption[]
+  /**
+   * Currently selected option index
+   */
+  selected: number
+  /**
+   * Callback to update selected option index
+   */
+  setSelected: (index: number) => void
+}
+
+const Dropdown: React.FC<DropdownProps> = ({
+  label,
+  options,
+  selected,
+  setSelected
+}) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
     const toggleDropdown = () => {
@@ -20,7 +49,7 @@ const Dropdown = ({ label, options, selected, setSelected }) => {
               {options[selected].label}
             </span>
           )}
-        {isDropdownOpen && (
+          {isDropdownOpen && (
             <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
                 {options.map((option, index) => (
                     <div
@@ -35,7 +64,7 @@ const Dropdown = ({ label, options, selected, setSelected }) => {
                     </div>
                 ))}
             </div>
-        )}
+          )}
         </div>
     )
 }

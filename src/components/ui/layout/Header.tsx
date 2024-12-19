@@ -1,13 +1,21 @@
+import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ConnectLink from '../../connect/ConnectLink'
 
-const Header = ({logo = '/qubic.svg'}) => {
+export interface HeaderProps {
+  /**
+   * Path to the logo image
+   */
+  logo?: string
+}
+
+const Header: React.FC<HeaderProps> = ({ logo = '/qubic.svg' }) => {
   // Try to access router context - if it fails, we know Router isn't available
-  let hasRouter = true;
+  let hasRouter = true
   try {
-    useNavigate();
+    useNavigate()
   } catch {
-    hasRouter = false;
+    hasRouter = false
   }
 
   const LogoWrapper = hasRouter ? (
@@ -18,13 +26,15 @@ const Header = ({logo = '/qubic.svg'}) => {
     <a href="/">
       <img src={logo} alt="logo" />
     </a>
-  );
+  )
 
   return (
-    <div className="
+    <div
+      className="
       fixed h-[78px] flex w-full z-10 top-0 gap-6 justify-center items-center
       border-b border-solid border-gray-70 bg-gray-90
-    ">
+    "
+    >
       {LogoWrapper}
       <ConnectLink />
     </div>

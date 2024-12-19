@@ -3,8 +3,6 @@ import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
 import dts from "vite-plugin-dts";
 import tailwindcss from "tailwindcss";
-import svgr from 'vite-plugin-svgr';
-
 // https://vitejs.dev/config/
 export default defineConfig({
     build: {
@@ -21,8 +19,7 @@ export default defineConfig({
                 'react-router-dom',
                 '@qubic-lib/qubic-ts-library',
                 'tailwindcss',
-                '@qubic-lib/qubic-ts-vault-library',
-                '@metamask/providers',
+                '@qubic-lib/qubic-ts-vault-library'
             ],
             output: {
                 globals: {
@@ -34,20 +31,19 @@ export default defineConfig({
         },
         sourcemap: true,
         emptyOutDir: true,
+        minify: false, // Disable minification to preserve console logs
+        terserOptions: {
+            compress: {
+                drop_console: false, // Preserve console logs
+                pure_funcs: [] // Don't remove any functions
+            },
+            mangle: false // Don't mangle variable names
+        }
     },
-    plugins: [
-      react(),
-      dts({ rollupTypes: true }),
-      svgr(),
-    ],
+    plugins: [react(), dts({ rollupTypes: true })],
     css: {
         postcss: {
             plugins: [tailwindcss],
         },
-    },
-    server: {
-      fs: {
-        strict: true, // Disallow file imports outside the project root
-      },
     },
 });
