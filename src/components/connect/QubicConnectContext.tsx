@@ -4,6 +4,7 @@ import Crypto from '@qubic-lib/qubic-ts-library/dist/crypto'
 import { publicKeyStringToBytes } from '@qubic-lib/qubic-ts-library/dist/converter/converter.js'
 import { MetaMaskProvider } from './MetamaskContext'
 import { connectTypes, defaultSnapOrigin, tickOffset } from './config'
+import { Transaction } from '../../types'
 
 // Constants from QubicHelper
 const PUBLIC_KEY_LENGTH = 32
@@ -39,6 +40,7 @@ interface QubicConnectContextValue {
   broadcastTx: (tx: Uint8Array) => Promise<{ status: number; result: any }>
   getTickInfo: () => Promise<{ tickInfo: TickInfo }>
   getBalance: (publicId: string) => Promise<{ balance: Balance }>
+  getTransactionsHistory: (publicId: string, startTick?: number, endTick?: number) => Promise<any>
   tickOffset: number
   getPaymentTx: (sender: string, receiver: string, amount: number, tick: number) => Promise<{
     tx: Uint8Array
@@ -153,6 +155,28 @@ export function QubicConnectProvider({ children }: QubicConnectProviderProps) {
       return { balance: { id: publicId, balance: 0 } }
     }
     return results
+  }
+
+  const getTransactionsHistory = async (publicId: string, startTick: number = 1, endTick?: number) => {
+    // check if endTick is set if not set to current tick
+    if (endTick === undefined) {
+      const tickInfo = await getTickInfo()
+      endTick = tickInfo.tick
+    }
+    const url = `${httpEndpoint}/v1/identities/${publicId}/transfer-transactions?startTick=${startTick}&endTick=${endTick}`
+    const historyTxsResult = await fetch(url)
+    const results = await historyTxsResult.json()
+    // check if info is valid
+    if (!results || !results.transferTransactionsPerTick) {
+      console.warn('getTransactionsHistory: Invalid transaction history')
+      return { transactions: [] }
+    }
+    // extract all transactions from the result
+    const transactions: Transaction[] = []
+    for (const txs of results.transferTransactionsPerTick) {
+      transactions.push(...txs.transactions)
+    }
+    return transactions
   }
 
   const getPaymentTx = async (sender: string, receiver: string, amount: number, tick: number) => {
@@ -270,6 +294,7 @@ export function QubicConnectProvider({ children }: QubicConnectProviderProps) {
     broadcastTx,
     getTickInfo,
     getBalance,
+    getTransactionsHistory,
     tickOffset,
     getPaymentTx,
   }

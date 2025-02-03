@@ -1,5 +1,6 @@
 export { type GetSnapsResponse, type Snap } from './snap';
 export { type Account } from './account';
+export { type Transaction } from './transaction';
 
 interface EthereumProvider {
   isMetaMask?: boolean; // True if the provider is MetaMask
