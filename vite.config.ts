@@ -10,6 +10,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "./src/index.ts"),
       name: "qubic-react-ui",
+      formats: ['es', 'umd'],
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
@@ -41,7 +42,14 @@ export default defineConfig({
       mangle: false // Don't mangle variable names
     }
   },
-  plugins: [react(), dts({ rollupTypes: true })],
+  plugins: [
+    react(),
+    dts({
+      rollupTypes: true,
+      include: ['src'],
+      exclude: ['**/*.test.ts', '**/*.test.tsx', 'node_modules/**']
+    })
+  ],
   css: {
     postcss: {
       plugins: [tailwindcss],

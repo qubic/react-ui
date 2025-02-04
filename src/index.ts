@@ -14,6 +14,7 @@ export { default as LabelData } from './components/ui/LabelData';
 export { default as LabelWithPopover } from './components/ui/LabelWithPopover';
 export { default as MinMaxSpan } from './components/ui/MinMaxSpan';
 export { default as SelectDateTime } from './components/ui/SelectDateTime';
+export { default as Icons } from './components/ui/Icons';
 
 // Layout Components
 export { default as Footer } from './components/ui/layout/Footer';
@@ -26,8 +27,22 @@ export { default as ConnectModal } from './components/connect/ConnectModal';
 export { QubicConnectProvider, useQubicConnect } from './components/connect/QubicConnectContext';
 export { MetaMaskProvider, MetaMaskContext, type MetamaskState } from './components/connect/MetamaskContext';
 
-// Types
-export * from './types';
-
 // Utils
 export * from './components/util';
+
+// Types
+export type { GetSnapsResponse, Snap } from './types/snap';
+export type { Account } from './types/account';
+export type { Transaction } from './types/transaction';
+export type {
+  BalanceInfo,
+  InputMaxCharsProps,
+  InputNumbersProps,
+  ButtonProps,
+  DropdownOption,
+  DropdownProps,
+  ConfirmTxModalProps,
+  CardProps,
+  HeaderProps,
+  TickInfoType
+} from './types/qubic-react-ui';
