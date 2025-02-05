@@ -61,6 +61,11 @@ export interface BalanceInfo {
   };
 }
 
+export interface ProductLogoProps {
+  name: string; // name of your Qubic product
+  className?: string;
+}
+
 declare const QubicConnectProvider: React.FC<{ children: ReactNode }>;
 declare const Header: React.FC<HeaderProps>;
 declare const Card: React.FC<CardProps>;
@@ -69,6 +74,7 @@ declare const InputMaxChars: React.FC<InputMaxCharsProps>;
 declare const InputNumbers: React.FC<InputNumbersProps>;
 declare const ConfirmTxModal: React.FC<ConfirmTxModalProps>;
 declare const Dropdown: React.FC<DropdownProps>;
+declare const ProductLogo: React.FC<ProductLogoProps>;
 
 export interface IconsType {
   CopyElement: (props: SVGProps<SVGSVGElement>) => JSX.Element;
@@ -86,7 +92,8 @@ export {
   InputNumbers,
   ConfirmTxModal,
   Dropdown,
-  Icons
+  Icons,
+  ProductLogo,
 };
 
 declare function useQubicConnect(): {

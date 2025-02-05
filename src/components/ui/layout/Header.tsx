@@ -4,9 +4,9 @@ import ConnectLink from '../../connect/ConnectLink'
 
 export interface HeaderProps {
   /**
-   * Path to the logo image
+   * Path to the logo image or React Component
    */
-  logo?: string
+  logo?: string | React.ReactNode
 }
 
 const Header: React.FC<HeaderProps> = ({ logo = '/qubic.svg' }) => {
@@ -18,14 +18,20 @@ const Header: React.FC<HeaderProps> = ({ logo = '/qubic.svg' }) => {
     hasRouter = false
   }
 
+  const renderLogo = () => {
+    if (typeof logo === 'string') {
+      return <img src={logo} alt="logo" />
+    } else if (React.isValidElement(logo)) {
+      return logo
+    } else {
+      return <></>
+    }
+  }
+
   const LogoWrapper = hasRouter ? (
-    <Link to="/">
-      <img src={logo} alt="logo" />
-    </Link>
+    <Link to="/">{renderLogo()}</Link>
   ) : (
-    <a href="/">
-      <img src={logo} alt="logo" />
-    </a>
+    <a href="/">{renderLogo()}</a>
   )
 
   return (

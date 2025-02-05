@@ -15,6 +15,7 @@ export { default as LabelWithPopover } from './components/ui/LabelWithPopover';
 export { default as MinMaxSpan } from './components/ui/MinMaxSpan';
 export { default as SelectDateTime } from './components/ui/SelectDateTime';
 export { default as Icons } from './components/ui/Icons';
+export { default as ProductLogo } from './components/ui/ProductLogo';
 
 // Layout Components
 export { default as Footer } from './components/ui/layout/Footer';
