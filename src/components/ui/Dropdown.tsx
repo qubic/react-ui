@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 export interface DropdownOption {
   label: string
@@ -31,13 +31,30 @@ const Dropdown: React.FC<DropdownProps> = ({
   setSelected
 }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const dropdownRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false)
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside)
+        document.addEventListener('touchstart', handleClickOutside)
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener('touchstart', handleClickOutside)
+        }
+    }, [])
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen)
     }
 
     return (
-        <div className="relative flex flex-col items-start">
+        <div ref={dropdownRef} className="relative flex flex-col items-start">
           <div className="flex items-center cursor-pointer" onClick={toggleDropdown}>
             <span className="text-primary-40 font-space cursor-pointer">
               {label}
