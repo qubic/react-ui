@@ -43,7 +43,7 @@ export const HeaderButtons = ({ state, onConnectClick, }: {
   onConnectClick(): unknown
 }) => {
 
-  console.log('state', state)
+  // console.log('state', state)
 
   if (!state.snapsDetected && !state.installedSnap) {
     return <InstallButton />

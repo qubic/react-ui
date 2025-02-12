@@ -5,6 +5,7 @@ import CloseIcon from '../../assets/close.svg'
 import { useQubicConnect } from "./QubicConnectContext"
 
 interface Transaction {
+  title: string
   description: string
   targetTick?: number
 }
@@ -58,7 +59,7 @@ const ConfirmTxModal: React.FC<ConfirmTxModalProps> = ({
 
     const fetchTick = async () => {
       const t = await getTickInfo()
-      setTick(t.tickInfo.tick)
+      setTick(t.tick)
     }
 
     if (confirmedTx) {
@@ -89,7 +90,7 @@ const ConfirmTxModal: React.FC<ConfirmTxModalProps> = ({
     cTx.targetTick = cTx.targetTick + beTickOffset // add ticks as quottery backend buffer
     // Fetch initial tick value
     const initialTickInfo = await getTickInfo()
-    setInitialTick(initialTickInfo.tickInfo.tick)
+    setInitialTick(initialTickInfo.tick)
     setConfirmedTx(cTx)
   }
 
