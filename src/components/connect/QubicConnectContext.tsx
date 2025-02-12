@@ -1,10 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { QubicHelper } from '@qubic-lib/qubic-ts-library/dist/qubicHelper'
 import Crypto from '@qubic-lib/qubic-ts-library/dist/crypto'
 import { publicKeyStringToBytes } from '@qubic-lib/qubic-ts-library/dist/converter/converter.js'
 import { MetaMaskProvider } from './MetamaskContext'
-import { connectTypes, defaultSnapOrigin, tickOffset } from './config'
-import { Transaction } from '../../types'
+import { connectTypes, getSnapOrigin, tickOffset } from './config'
+import { Transaction, TickInfoType, QubicConnectProviderProps } from '../../types'
 
 // Constants from QubicHelper
 const PUBLIC_KEY_LENGTH = 32
@@ -18,11 +18,6 @@ interface Wallet {
   privateKey?: string
 }
 
-interface TickInfo {
-  tick: number
-  epoch: number
-}
-
 interface Balance {
   id: string
   balance: number
@@ -32,13 +27,14 @@ interface QubicConnectContextValue {
   connected: boolean
   wallet: Wallet | null
   showConnectModal: boolean
+  config: QubicConnectProviderProps['config']
   connect: (wallet: Wallet) => void
   disconnect: () => void
   toggleConnectModal: () => void
   getMetaMaskPublicId: (accountIdx?: number, confirm?: boolean) => Promise<string>
   getSignedTx: (tx: Uint8Array, offset: number) => Promise<{ tx: Uint8Array; offset: number }>
   broadcastTx: (tx: Uint8Array) => Promise<{ status: number; result: any }>
-  getTickInfo: () => Promise<{ tickInfo: TickInfo }>
+  getTickInfo: () => Promise<TickInfoType>
   getBalance: (publicId: string) => Promise<{ balance: Balance }>
   getTransactionsHistory: (publicId: string, startTick?: number, endTick?: number) => Promise<any>
   tickOffset: number
@@ -48,13 +44,9 @@ interface QubicConnectContextValue {
   }>
 }
 
-interface QubicConnectProviderProps {
-  children: ReactNode
-}
-
 const QubicConnectContext = createContext<QubicConnectContextValue | undefined>(undefined)
 
-export function QubicConnectProvider({ children }: QubicConnectProviderProps) {
+export function QubicConnectProvider({ children, config }: QubicConnectProviderProps) {
   const [connected, setConnected] = useState(false)
   const [wallet, setWallet] = useState<Wallet | null>(null)
   const [showConnectModal, setShowConnectModal] = useState(false)
@@ -101,7 +93,7 @@ export function QubicConnectProvider({ children }: QubicConnectProviderProps) {
     return await window.ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
-        snapId: defaultSnapOrigin,
+        snapId: getSnapOrigin(config?.snapOrigin),
         request: {
           method: 'getPublicId',
           params: {
@@ -120,7 +112,7 @@ export function QubicConnectProvider({ children }: QubicConnectProviderProps) {
     return await window.ethereum.request({
       method: 'wallet_invokeSnap',
       params: {
-        snapId: defaultSnapOrigin,
+        snapId: getSnapOrigin(config?.snapOrigin),
         request: {
           method: 'signTransaction',
           params: {
@@ -134,24 +126,24 @@ export function QubicConnectProvider({ children }: QubicConnectProviderProps) {
   }
 
   const getTickInfo = async () => {
-    console.log('getTickInfo')
+    // console.log('getTickInfo')
     const tickResult = await fetch(`${httpEndpoint}/v1/tick-info`)
     const tick = await tickResult.json()
     // check if tick is valid
     if (!tick || !tick.tickInfo) {
-      console.warn('getTickInfo: Invalid tick')
+      // console.warn('getTickInfo: Invalid tick')
       return { tickInfo: { tick: 0, epoch: 0 } }
     }
     return tick.tickInfo
   }
 
   const getBalance = async (publicId: string) => {
-    console.log('getBalance: for publicId ', publicId)
+    // console.log('getBalance: for publicId ', publicId)
     const accountResult = await fetch(`${httpEndpoint}/v1/balances/${publicId}`)
     const results = await accountResult.json()
     // check if info is valid
     if (!results || !results.balance) {
-      console.warn('getBalance: Invalid balance')
+      // console.warn('getBalance: Invalid balance')
       return { balance: { id: publicId, balance: 0 } }
     }
     return results
@@ -287,6 +279,7 @@ export function QubicConnectProvider({ children }: QubicConnectProviderProps) {
     wallet,
     showConnectModal,
     connect,
+    config,
     disconnect,
     toggleConnectModal,
     getMetaMaskPublicId,

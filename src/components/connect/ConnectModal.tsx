@@ -31,7 +31,7 @@ const ConnectModal = ({ open, onClose }: { open: boolean; onClose: () => void })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [password, setPassword] = useState('')
   // Context connect handling
-  const { connect, disconnect, connected, getMetaMaskPublicId } = useQubicConnect()
+  const { config, connect, disconnect, connected, getMetaMaskPublicId } = useQubicConnect()
   // account selection
   const [accounts, setAccounts] = useState<Account[]>([])
   const [selectedAccount, setSelectedAccount] = useState(0)
@@ -63,8 +63,9 @@ const ConnectModal = ({ open, onClose }: { open: boolean; onClose: () => void })
    */
   const mmSnapConnect = async () => {
     try {
-      await connectSnap(!state.isFlask ? 'npm:@qubic-lib/qubic-mm-snap' : undefined)
-      const installedSnap = await getSnap()
+      const snapId = config?.snapOrigin;
+      await connectSnap(snapId);
+      const installedSnap = await getSnap();
       // get publicId from snap
       const publicKey = await getMetaMaskPublicId(0)
       const wallet = {

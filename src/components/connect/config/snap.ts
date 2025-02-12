@@ -1,5 +1,7 @@
 /**
- * The snap origin to use.
- * Will default to the local hosted snap.
+ * Gets the snap origin to use.
+ * @param configuredOrigin Optional custom snap origin from config
+ * @returns The snap origin to use - either the configured one or the default npm package
  */
-export const defaultSnapOrigin = `local:http://localhost:8080`;
+export const getSnapOrigin = (configuredOrigin?: string) =>
+  configuredOrigin ?? 'npm:@qubic-lib/qubic-mm-snap';

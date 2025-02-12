@@ -1,6 +1,6 @@
 import type { MetaMaskInpageProvider } from '@metamask/providers';
 
-import { defaultSnapOrigin } from '../config';
+import { getSnapOrigin } from '../config';
 import type { GetSnapsResponse, Snap } from '../../../types';
 
 /**
@@ -23,15 +23,26 @@ export const getSnaps = async (
  * @param params - The params to pass with the snap to connect.
  */
 export const connectSnap = async (
-  snapId: string = defaultSnapOrigin,
+  snapId: string | undefined,
   params: Record<'version' | string, unknown> = {},
 ) => {
-  await window.ethereum.request({
-    method: 'wallet_requestSnaps',
-    params: {
-      [snapId]: params,
-    },
-  });
+  snapId = getSnapOrigin(snapId);
+  console.log('Connecting snap:', snapId);
+  if (!snapId) {
+    console.error('Invalid snapId provided');
+    return;
+  }
+  try {
+    await window.ethereum.request({
+      method: 'wallet_requestSnaps',
+      params: {
+        [snapId]: params,
+      },
+    });
+    console.log('Snap connected successfully:', snapId);
+  } catch (error) {
+    console.error('Failed to connect snap', error);
+  }
 };
 
 /**
@@ -46,10 +57,10 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
 
     return Object.values(snaps).find(
       (snap) =>
-        snap.id === defaultSnapOrigin && (!version || snap.version === version),
+        snap.id === getSnapOrigin() && (!version || snap.version === version),
     );
   } catch (error) {
-    console.log('Failed to obtain installed snap', error);
+    console.error('Failed to obtain installed snap', error);
     return undefined;
   }
 };

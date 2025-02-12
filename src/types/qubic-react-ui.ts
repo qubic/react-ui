@@ -22,6 +22,7 @@ export interface ButtonProps {
 
 export interface DropdownOption {
   label: string;
+  value: string | number;
 }
 
 export interface DropdownProps {
@@ -66,7 +67,16 @@ export interface ProductLogoProps {
   className?: string;
 }
 
-declare const QubicConnectProvider: React.FC<{ children: ReactNode }>;
+export interface QubicConnectConfig {
+  snapOrigin?: string;
+}
+
+export interface QubicConnectProviderProps {
+  children: ReactNode;
+  config?: QubicConnectConfig;
+}
+
+declare const QubicConnectProvider: React.FC<QubicConnectProviderProps>;
 declare const Header: React.FC<HeaderProps>;
 declare const Card: React.FC<CardProps>;
 declare const Button: React.FC<ButtonProps>;

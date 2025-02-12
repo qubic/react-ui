@@ -1,2 +1,2 @@
-export { defaultSnapOrigin } from './snap';
+export { getSnapOrigin } from './snap';
 export { tickOffset, connectTypes } from './qubic';
